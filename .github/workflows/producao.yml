@@ -1,0 +1,46 @@
+name: Pipeline de producao
+env:
+    Node_ENV: production
+    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    
+on:
+    push:
+        branches:
+        - main
+    
+jobs:
+
+
+    job1:
+        name: CI - Build e criação do artefato
+        runs-on: ubuntu-latest
+        steps:
+        -   name: Pegar código do Repositório
+            uses: action/checkout@v3
+
+        -   name: Instalando pacotes do npm
+            run: npm install
+        
+        -   name: Gerando documentação do swagger.json
+            run: npm run autoDoc
+    
+        -   name: Apagando pasta node_modules
+            run: rm -rf node_modules
+
+        -   name: Apagando pasta .git
+            run: rm -rf .git
+        
+        -   name: Arquivos e pastas
+            run: ls
+
+        -   name: Criando artefato ZIP dp código buildado
+            uses: actions/upload-artifact@v3
+            with: 
+                name: artefato
+                retention-days: 1
+                path: ./
+
+    
+    
