@@ -19,56 +19,55 @@ jobs:
         steps:
         -   name: Pegar código do Repositório
             uses: actions/checkout@v3
-
+    
         -   name: Instalando pacotes do npm
             run: npm install
-        
+    
         -   name: Gerando documentação do swagger.json
             run: npm run autoDoc
     
         -   name: Apagando pasta node_modules
             run: rm -rf node_modules
-
+    
         -   name: Apagando pasta .git
             run: rm -rf .git
-        
+    
         -   name: Arquivos e pastas
             run: ls
-
-        -   name: Criando artefato ZIP dp código buildado #feito para conseguir utilizar o mesmo código no job2
+    
+        -   name: Criando artefato ZIP do código buildado
             uses: actions/upload-artifact@v3
-            with: 
+            with:
                 name: artefato
                 retention-days: 1
                 path: ./
-
-
-
+    
+    
+    
+    
     job2:
         name: CD - Deploy na Vercel
-        needs: job1  #feito para não ser executado em paralelo com job1
+        needs: job1
         runs-on: ubuntu-latest
         steps:
         -   name: Baixando Artefato do código buildado
-            uses: actions/download-artifact@v3 #baixando a biblioteca criada no job1
+            uses: actions/download-artifact@v3
             with:
                 name: artefato
-        
-        -   name: Instalando pacotes npm
+
+        -   name: Instalando pacotes do npm
             run: npm install
 
         -   name: Arquivos e pastas do artefato
             run: ls
-        
-        -   name: instalando CLI da Vercel
-            run: npm install --global vercel@latest
 
-            #Vercel github actions
+        -   name: Instalando CLI da Vercel
+            run: npm install --global vercel@latest
 
         -   name: Buscando informações de ambiente no Vercel
             run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-        -   name: Buildando artefator do projeto
+        -   name: Buildando artefatos do projeto
             run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
         -   name: Deploy de artefatos do projeto na Vercel
