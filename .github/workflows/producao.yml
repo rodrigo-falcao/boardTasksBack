@@ -1,14 +1,14 @@
 name: Pipeline de producao
 env:
     Node_ENV: production
-    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }} #criado na vercel para códigos pessoais.
+    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} #criado na vercel para códigos pessoais.
 
     
 on:
     push:
         branches:
-        - main
+        - main #escolhendo qual será a branch que vai executar
     
 jobs:
 
@@ -35,12 +35,41 @@ jobs:
         -   name: Arquivos e pastas
             run: ls
 
-        -   name: Criando artefato ZIP dp código buildado
+        -   name: Criando artefato ZIP dp código buildado #feito para conseguir utilizar o mesmo código no job2
             uses: actions/upload-artifact@v3
             with: 
                 name: artefato
                 retention-days: 1
                 path: ./
 
-    
-    
+
+
+    job2:
+        name: CD - Deploy na Vercel
+        needs: job1  #feito para não ser executado em paralelo com job1
+        runs-on: ubuntu-latest
+        steps:
+        -   name: Baixando Artefato do código buildado
+            uses: actions/download-artifact@v3 #baixando a biblioteca criada no job1
+            with:
+                name: artefato
+        
+        -   name: Instalando pacotes npm
+            run: npm install
+
+        -   name: Arquivos e pastas do artefato
+            run: ls
+        
+        -   name: instalando CLI da Vercel
+            run: npm install --global vercel@latest
+
+            #Vercel github actions
+
+        -   name: Buscando informações de ambiente no Vercel
+            run: vercel pull --yes --enviroment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+        -   name: Buildando artefator do projeto
+            run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+        -   name: Deploy de artefatos do projeto na Vercel
+            run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
