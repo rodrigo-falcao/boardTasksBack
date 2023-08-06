@@ -15,12 +15,12 @@ async function authDocProducao(req, res, next) {
     if(senhaDigitada){
         res.status(401).set('Content-Type', 'text/html');
         res.send(Buffer.from(`
-        <form method="post">
-            <p style="color: red;">Senha Errada!</p>
-            <label for="senhaDigitada">Senha da documentação:</label>
-            <input type="password" name="senhaDigitada" id="senhaDigitada" />
-            <button type="submit">Entrar</button>
-        </form>
+            <form method="post">
+                <p style="color: red;">Senha Errada!</p>
+                <label for="senhaDigitada">Senha da documentação:</label>
+                <input type="password" name="senhaDigitada" id="senhaDigitada" />
+                <button type="submit">Entrar</button>
+            </form>
         `))
     } else {
         // Caso o usuário ainda não digitou a senha estando em modo de produção
