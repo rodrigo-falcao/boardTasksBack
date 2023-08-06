@@ -1,6 +1,6 @@
 name: Pipeline de producao
 env:
-    Node_ENV: production
+    NODE_ENV: production
     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }} #criado na vercel para códigos pessoais.
     VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} #criado na vercel para códigos pessoais.
 
@@ -66,7 +66,7 @@ jobs:
             #Vercel github actions
 
         -   name: Buscando informações de ambiente no Vercel
-            run: vercel pull --yes --enviroment=production --token=${{ secrets.VERCEL_TOKEN }}
+            run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
         -   name: Buildando artefator do projeto
             run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
