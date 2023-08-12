@@ -21,7 +21,7 @@
     "morgan": "~1.9.1",
     "string": "^3.3.3",
     "swagger-autogen": "^2.23.5",
-    "swagger-ui-express": "^5.0.0",
+    "swagger-ui-express": "^4.6.3",
     "validator": "^13.11.0"
   }
 }
