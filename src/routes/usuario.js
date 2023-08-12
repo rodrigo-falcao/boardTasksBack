@@ -10,10 +10,10 @@ const router = express.Router();
 /* GET users listing. */
 router.post('/criar', conectarBancoDados, async function(req, res) {
   try {
-    // #swagger.tag = ['Usuario']
+    // #swagger.tags = ['Usuario']
     let {nome, email, senha} = req.body;
-    const numeroVezes = 10;
-    const senhaHash = await bcrypt.hash(senha, numeroVezes);
+    const numeroVezesHash = 10;
+    const senhaHash = await bcrypt.hash(senha, numeroVezesHash);
     const respostaBD = await EsquemaUsuario.create({nome, email, senha: senhaHash});
 
     res.status(200).json({
@@ -21,11 +21,12 @@ router.post('/criar', conectarBancoDados, async function(req, res) {
       statusMensagem: "Usuário criado com sucesso.",
       resposta: respostaBD
     })
+
   } catch (error) {
     if(String(error).includes("email_1 dup key")){
-      return tratarErrosEsperados(res, "Error: Já existe uma conta com esse e-mail!")
+      return tratarErrosEsperados(res, "Error: Já existe uma conta com esse e-mail!");
     }
-    return tratarErrosEsperados(res, error)
+    return tratarErrosEsperados(res, error);
   }
 });
 
